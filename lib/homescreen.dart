@@ -1,5 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:labfinal/passwordspage.dart';
 
 class homescreen extends StatefulWidget {
   const homescreen({Key key}) : super(key: key);
@@ -95,6 +96,7 @@ class _homescreenState extends State<homescreen> {
   }
 
 
+  String Loginpassword = 'pakistan123';
   Future<void> _showFirstDialogue(BuildContext context){
     return showDialog(context: context, builder: (BuildContext context){
       TextEditingController passwordController = TextEditingController();
@@ -116,10 +118,9 @@ class _homescreenState extends State<homescreen> {
               GestureDetector(
                 child: Text('Ok'),
                 onTap: (){
+                  Loginpassword = passwordController.text;
                   Navigator.pop(context);
                   openSecondDialogueBox();
-
-
                 },
               ),
               Padding(padding: EdgeInsets.all(8.0)),
@@ -230,7 +231,47 @@ class _homescreenState extends State<homescreen> {
     });
   }
 
-  void ShowPasswords() {}
+  Future<void> _checkPasswordDialogue(BuildContext context){
+    return showDialog(context: context, builder: (BuildContext context){
+      TextEditingController passwordController = TextEditingController();
+      return AlertDialog(
+        title: Text('First Dialogue Box'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: [
+              TextField(
+                controller: passwordController,
+                decoration: const InputDecoration(
+                  labelText: 'Enter Password',
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xff69A03A)),
+                  ),
+                ),
+              ),
+              SizedBox(height: 10,),
+              GestureDetector(
+                child: Text('Ok'),
+                onTap: (){
+                  if(passwordController == Loginpassword){
+                    Navigator.pop(context);
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => const passwordsPage()));
+                  }else{
+                    print('Wrong password try again');
+                  }
+
+                },
+              ),
+              Padding(padding: EdgeInsets.all(8.0)),
+            ],
+          ),
+        ),
+      );
+    });
+  }
+  void ShowPasswords() {
+    _checkPasswordDialogue(context);
+  }
 
 
 }
