@@ -1,14 +1,46 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:labfinal/brain.dart';
 
-class passwordsPage extends StatefulWidget {
-  const passwordsPage({Key key}) : super(key: key);
+class hiddenPasswordsPage extends StatefulWidget {
+  const hiddenPasswordsPage({Key key}) : super(key: key);
 
   @override
-  _passwordsPageState createState() => _passwordsPageState();
+  _hiddenPasswordsPageState createState() => _hiddenPasswordsPageState();
 }
 
-class _passwordsPageState extends State<passwordsPage> {
+class _hiddenPasswordsPageState extends State<hiddenPasswordsPage> {
+  brain obj = brain();
+  var listt = List<Widget>();
+
+  Widget postsUI(String description, String Password){
+    return Card(
+      elevation: 10.0,
+      margin: EdgeInsets.all(15.0),
+      child: Container(
+        padding: EdgeInsets.all(14.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(description),
+                Text(Password),
+              ],),
+
+          ],),),);
+  }
+  List<Widget> processWidgets(){
+    for(int i =0; i<= obj.hiddenPasswordsList().length-1; i+2){
+      listt.add(postsUI(obj.hiddenPasswordsList()[i], obj.hiddenPasswordsList()[i+1]),);
+    }
+    return listt;
+  }
+  @override
+  void initState() {
+    super.initState();
+    obj.dataProcess();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,18 +91,8 @@ class _passwordsPageState extends State<passwordsPage> {
                         color: Colors.grey,
                         thickness: 1.0,
                       ),
-                      StreamBuilder (
-                        stream: FirebaseDatabase.instance
-                            .reference()
-                            .child('Data').onChildAdded,
-                        builder:
-                            (BuildContext context, AsyncSnapshot event) {
-                          if (!event.hasData)
-                            return  Center(child: Text('No Passwords available'),); //CircularProgressIndicator();
-                          Map<dynamic, dynamic> data = event.data.snapshot.value;
-                          return Example(data);
-
-                        },
+                      Column (
+                        children: processWidgets(),
                       ),
                     ],
                   ),
@@ -81,37 +103,5 @@ class _passwordsPageState extends State<passwordsPage> {
         ],
       ),
     );
-  }
-  Widget Example(data) {
-
-    String Description;
-    String Password;
-    for(var i in data.keys){
-      if(i == 'Description'){
-        Description = data['$i'];
-      }else if(i == 'Password'){
-        Password = data['$i'];
-      }
-      // items = data['$i'];
-    }
-      return postsUI(Description, Password);
-  }
-  Widget postsUI(String description, String Password){
-    return Card(
-      elevation: 10.0,
-      margin: EdgeInsets.all(15.0),
-      child: Container(
-        padding: EdgeInsets.all(14.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(description),
-                Text(Password),
-              ],),
-
-          ],),),);
   }
 }

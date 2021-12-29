@@ -1,6 +1,9 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:labfinal/hiddenpasswordpage.dart';
 import 'package:labfinal/passwordspage.dart';
+
+import 'brain.dart';
 
 class homescreen extends StatefulWidget {
   const homescreen({Key key}) : super(key: key);
@@ -10,7 +13,7 @@ class homescreen extends StatefulWidget {
 }
 
 class _homescreenState extends State<homescreen> {
-  var PasswordListWidgets = List<Widget>();
+
   List data = List();
   @override
   Widget build(BuildContext context) {
@@ -68,30 +71,7 @@ class _homescreenState extends State<homescreen> {
       ),
     ),],),
       backgroundColor: Colors.white,
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Expanded(
-            child: ListView(
-              children: [
-                Container(
-                  margin: const EdgeInsets.all(20.0),
-                  decoration: const BoxDecoration(
-                    color: Color(0xffffffff),
-                  ),
-                  child: Column(
-                    children: [
-                      Center(child: Text(''),),
-                      Column(children: PasswordListWidgets,),
-                    ],
-
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-      ],),
+      body: Container(),
     );
   }
 
@@ -167,7 +147,11 @@ class _homescreenState extends State<homescreen> {
                   data.add(passwordController.text);
                   // PasswordListWidgets.add(postsUI(descriptionController.text, passwordController.text));
                   // PasswordListWidgets.add(SizedBox(height: 10,),);
+                  brain obj = brain();
+                  obj.getData(data);
                   Navigator.pop(context);
+                   Navigator.of(context).pushReplacement(
+                       MaterialPageRoute(builder: (context) => const hiddenPasswordsPage()));
                 },
               ),
               Padding(padding: EdgeInsets.all(8.0)),
@@ -235,7 +219,7 @@ class _homescreenState extends State<homescreen> {
     return showDialog(context: context, builder: (BuildContext context){
       TextEditingController passwordController = TextEditingController();
       return AlertDialog(
-        title: Text('First Dialogue Box'),
+        title: Text('Dialogue Box before showing hidden passwords'),
         content: SingleChildScrollView(
           child: ListBody(
             children: [
@@ -252,7 +236,7 @@ class _homescreenState extends State<homescreen> {
               GestureDetector(
                 child: Text('Ok'),
                 onTap: (){
-                  if(passwordController == Loginpassword){
+                  if(passwordController.text == Loginpassword){
                     Navigator.pop(context);
                     Navigator.of(context).pushReplacement(
                         MaterialPageRoute(builder: (context) => const passwordsPage()));
