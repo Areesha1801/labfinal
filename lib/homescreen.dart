@@ -116,7 +116,9 @@ class _homescreenState extends State<homescreen> {
               GestureDetector(
                 child: Text('Ok'),
                 onTap: (){
+                  Navigator.pop(context);
                   openSecondDialogueBox();
+
 
                 },
               ),
@@ -160,9 +162,11 @@ class _homescreenState extends State<homescreen> {
                 child: Text('Ok'),
                 onTap: (){
                   print('show');
-                  saveToDatabase(descriptionController.text, passwordController.text);
-                  PasswordListWidgets.add(postsUI(descriptionController.text, passwordController.text));
-                  PasswordListWidgets.add(SizedBox(height: 10,),);
+                  data.add(descriptionController.text);
+                  data.add(passwordController.text);
+                  // PasswordListWidgets.add(postsUI(descriptionController.text, passwordController.text));
+                  // PasswordListWidgets.add(SizedBox(height: 10,),);
+                  Navigator.pop(context);
                 },
               ),
               Padding(padding: EdgeInsets.all(8.0)),
@@ -205,7 +209,28 @@ class _homescreenState extends State<homescreen> {
          ],),),);
   }
 
-  void savePassword() {}
+  void savePassword() {
+    for(int i=0; i<= data.length-1; i= i+2){
+      saveToDatabase(data[i], data[i+1]);
+    }
+    ShowSuccessDialogue(context);
+  }
+  Future<void> ShowSuccessDialogue(BuildContext context){
+    return showDialog(context: context, builder: (BuildContext context){
+      TextEditingController passwordController = TextEditingController();
+      return AlertDialog(
+        title: Text('Data Uploaded Successfully'),
+        content: SingleChildScrollView(
+          child: FlatButton(
+            child: const Text("Ok"),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
+      );
+    });
+  }
 
   void ShowPasswords() {}
+
+
 }

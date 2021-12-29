@@ -9,7 +9,7 @@ import 'homescreen.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  //await Firebase.initializeApp();
+  await Firebase.initializeApp();
   print("completed");
   return runApp(
     const MaterialApp(
